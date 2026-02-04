@@ -56,6 +56,18 @@
         }
       }
 
+      /* --- ERROR SHAKE CLASSES --- */
+      .error-shake {
+        animation: shake 0.2s ease-in-out;
+        border-color: #ef4444 !important;
+      }
+      @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-5px); }
+        75% { transform: translateX(5px); }
+      }
+      /* -------------------------- */
+
       .heart-beat {
         display: inline-block;
         animation: heartBeat 1.5s infinite ease-in-out;
@@ -99,8 +111,9 @@
           </p>
         </div>
         <div class="text-right hidden sm:block">
+            <p class="text-[10px] md:text-[11px] text-gray-500 uppercase tracking-widest font-semibold opacity-70">Target: My Favorite Developer</p>
           <p class="text-[10px] text-pink-400 italic font-semibold">
-            Auth: Fiancée (100%)
+            Auth: Fiancée (Excited Level 100%)
           </p>
         </div>
       </header>
