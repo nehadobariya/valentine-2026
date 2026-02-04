@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valentine Protocol | First Edition</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        /* Prevents the main page from scrolling */
+        html, body { 
+            height: 100%; 
+            overflow: hidden; 
+            font-family: 'Fira Code', monospace; 
+            background-color: #0d1117; 
+            color: #c9d1d9; 
+        }
+        .terminal-glow { box-shadow: 0 0 25px rgba(236, 72, 153, 0.1); }
+        .glass { background: rgba(22, 27, 34, 0.9); backdrop-filter: blur(12px); border: 1px solid #30363d; }
+        .error-shake { animation: shake 0.2s ease-in-out; border-color: #ef4444 !important; }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+        .animate-in { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .custom-scroll::-webkit-scrollbar { width: 4px; }
+        .custom-scroll::-webkit-scrollbar-track { background: transparent; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #30363d; border-radius: 10px; }
+    </style>
+</head>
+<body class="p-4 md:p-8 flex items-center justify-center">
+
+    <div class="max-w-5xl w-full h-full max-h-[850px] flex flex-col">
+        <header class="mb-6 flex justify-between items-end border-b border-gray-800 pb-4 flex-shrink-0">
+            <div>
+                <h1 class="text-xl font-bold text-pink-500 tracking-tight">~/first-valentine-exp/init.sh</h1>
+                <p class="text-[10px] text-gray-500 mt-1 uppercase">Status: <span class="animate-pulse text-green-500 font-bold">● Interactive_Mode</span></p>
+            </div>
+            <div class="text-right hidden md:block">
+                <p class="text-[10px] text-gray-500 uppercase tracking-widest font-semibold">Target: My Favorite Developer</p>
+                <p class="text-[10px] text-pink-400 italic">Auth: Fiancée (Excited Level 100%)</p>
+            </div>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 flex-grow overflow-hidden">
+            <div class="hidden md:flex flex-col h-full">
+                <div class="glass p-5 rounded-lg flex-grow border-pink-900/10 flex flex-col overflow-hidden">
+                    <h3 class="text-[10px] font-bold text-pink-500 uppercase mb-4 border-b border-gray-800 pb-2 tracking-widest">Initialization Logs</h3>
+                    <div class="space-y-4 text-[11px] leading-relaxed overflow-y-auto custom-scroll pr-2">
+                        <p class="text-blue-400">[0.001] First Valentine Instance Created.</p>
+                        <p class="text-purple-400">[0.005] Warning: High levels of excitement detected.</p>
+                        <p class="text-gray-400 italic mt-6 border-l-2 border-pink-500 pl-3 py-1">
+                            "I've never done this before, but since it's our first, I wanted it to be unique to us. No fluff, just our logic."
+                        </p>
+                        <p class="text-emerald-500/80 mt-4">[0.009] Fragrance assets: LOTUS & ROSE loaded.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="md:col-span-2 flex flex-col h-full overflow-hidden">
+                <div class="glass rounded-xl flex flex-col flex-grow overflow-hidden terminal-glow border-pink-900/30">
+                    <div class="bg-[#161b22] px-4 py-3 flex items-center border-b border-gray-800 flex-shrink-0">
+                        <div class="flex space-x-2 mr-6">
+                            <div class="w-3 h-3 rounded-full bg-red-500/40"></div>
+                            <div class="w-3 h-3 rounded-full bg-yellow-500/40"></div>
+                            <div class="w-3 h-3 rounded-full bg-green-500/40"></div>
+                        </div>
+                        <span id="title-bar" class="text-[10px] text-gray-500 font-mono italic">module_rose_day.cfg</span>
+                    </div>
+
+                    <div id="content-area" class="p-6 md:p-10 flex-grow overflow-y-auto custom-scroll flex flex-col justify-center">
+                    </div>
+
+                    <div class="bg-[#0d1117] p-5 flex justify-between items-center border-t border-gray-800 flex-shrink-0">
+                        <button onclick="handlePrev()" id="prev-btn" class="bg-gray-800/50 hover:bg-gray-700 text-gray-400 px-5 py-2 rounded text-[10px] font-bold transition-all disabled:opacity-0">
+                            ← BACK
+                        </button>
+                        
+                        <div class="text-[10px] font-mono text-gray-600 font-bold uppercase tracking-widest">
+                            STEP <span id="step-num" class="text-pink-500">1</span> OF 8
+                        </div>
+
+                        <button onclick="handleNext()" id="next-btn" class="bg-pink-600 hover:bg-pink-500 text-white px-8 py-2.5 rounded shadow-lg shadow-pink-900/20 text-[10px] font-bold transition-all uppercase tracking-wider">
+                            Save & Continue →
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyVB0YaVmV8jXMszYZ1dU_s0Uh7Bn5llXwjsVP_eSrci6jZqW8diaxqYoaLWivmqIa61Q/exec"; 
+
+        const days = [
+            {
+                date: "Feb 7 - Rose Day",
+                icon: "🪷",
+                message: "I absolutely love flowers, especially the purity of a Lotus and the classic Rose. I dream of a future for us that carries that same lasting fragrance. Since this is my first Valentine, I'm so excited to start it with this fresh scent.",
+                question: "Select Execution Path:<br>[A] <b>'Pair-Mode'</b>: We go flower hunting together.<br>[B] <b>'Custom Script'</b>: You have a different, unique idea for us.<br><br>Which protocol should we deploy?",
+                key: "rose_day"
+            },
+            {
+                date: "Feb 8 - Propose Day",
+                icon: "💍",
+                message: "This is my first time celebrating 'Propose Day' and it feels so right doing it with you. You've already gained 'admin access' to my heart, but I want to officially commit to our future today.",
+                question: "In your eyes, what's the most 'us' way to celebrate a commitment? A special meal, or a deep talk about our next 10 years?",
+                key: "propose_day"
+            },
+            {
+                date: "Feb 9 - Chocolate Day",
+                icon: "🍫",
+                message: "Life with a dev can be bitter like dark cocoa, but you make it sweet. Being my first Valentine, I want to know your flavor.",
+                question: "What is your absolute favorite 'sugar-boost' that we should treat ourselves to today?",
+                key: "chocolate_day"
+            },
+            {
+                date: "Feb 10 - Teddy Day",
+                icon: "🧸",
+                message: "I don't need a giant stuffed toy; I just need the comfort of your presence when my code doesn't compile.",
+                question: "What's our version of a 'Teddy'? A cozy movie night or a new ergonomic pillow?",
+                key: "teddy_day"
+            },
+            {
+                date: "Feb 11 - Promise Day",
+                icon: "🤝",
+                message: "In JS, a Promise is a guarantee. I promise to always be your debug partner and your biggest cheerleader. I'm so excited to make this promise to you officially.",
+                question: "What is one 'Life-Feature' you promise to always work on with me And What are 'non-negotiable' promises you want to add to our relationship documentation?",
+                key: "promise_day"
+            },
+            {
+                date: "Feb 12 - Hug Day",
+                icon: "🫂",
+                message: "Sometimes a physical 'reboot' (a hug) is all we need to fix a bad day. I'm looking forward to many of these during our first Valentine week.",
+                question: "How many 'reboots' should be our minimum system requirement?",
+                key: "hug_day"
+            },
+            {
+                date: "Feb 13 - Kiss Day",
+                icon: "💋",
+                message: "The most beautiful way to sync our hearts. Since it's my first Valentine, I'm realizing that the small gestures are the ones that matter most.",
+                question: "What's the best time for our 'Sync Session'—morning coffee or late-night stargazing?",
+                key: "kiss_day"
+            },
+            {
+                date: "Feb 14 - Valentine's Day",
+                icon: "✨",
+                message: "Final Deployment! I know you aren't big on 'Western' culture, and I love that about you. But since this is my first one, I'm just so happy to spend it with you. No rules, no hype, just us.",
+                question: "How shall we execute our final launch? Describe your perfect, simple, 'No-Marketing-Fluff' date.",
+                key: "valentine_main"
+            }
+        ];
+
+        let step = 0;
+        let responses = {};
+
+        function render() {
+            const current = days[step];
+            document.getElementById('step-num').innerText = step + 1;
+            document.getElementById('title-bar').innerText = `module_${current.key}.json`;
+            document.getElementById('prev-btn').disabled = (step === 0);
+
+            const savedValue = responses[current.key] || "";
+
+            document.getElementById('content-area').innerHTML = `
+                <div class="animate-in">
+                    <div class="flex items-center space-x-4 mb-4">
+                        <span class="text-4xl drop-shadow-lg">${current.icon}</span>
+                        <h2 class="text-lg font-bold text-white uppercase tracking-widest">${current.date}</h2>
+                    </div>
+                    <p class="text-gray-400 text-xs leading-relaxed mb-8 italic border-l-2 border-pink-500/50 pl-4 font-sans">
+                        "${current.message}"
+                    </p>
+                    <div class="space-y-4">
+                        <p class="text-[10px] text-pink-500 font-bold tracking-[0.2em] underline">// REQUIREMENT_FIELD</p>
+                        <p class="text-xs text-gray-300 font-medium leading-relaxed">${current.question}</p>
+                        <textarea id="input-field" required class="w-full bg-[#0d1117] border border-gray-800 rounded-lg p-4 text-emerald-400 focus:outline-none focus:border-pink-500 text-sm transition-all font-mono" rows="3" placeholder="Type your configuration here...">${savedValue}</textarea>
+                    </div>
+                </div>
+            `;
+            document.getElementById('input-field').focus();
+        }
+
+        function handleNext() {
+            const input = document.getElementById('input-field');
+            if (!input.value.trim()) {
+                input.classList.add('error-shake');
+                setTimeout(() => input.classList.remove('error-shake'), 300);
+                return;
+            }
+
+            responses[days[step].date] = input.value.trim();
+
+            if (step < days.length - 1) {
+                step++;
+                render();
+            } else {
+                finish();
+            }
+        }
+
+        function handlePrev() {
+            if (step > 0) {
+                const input = document.getElementById('input-field').value;
+                responses[days[step].date] = input;
+                step--;
+                render();
+            }
+        }
+
+        function finish() {
+            document.getElementById('next-btn').style.display = 'none';
+            document.getElementById('prev-btn').style.display = 'none';
+            const area = document.getElementById('content-area');
+            
+            area.innerHTML = `
+                <div class="text-center py-10 animate-in">
+                    <div class="text-6xl mb-6">🚀</div>
+                    <h2 class="text-2xl font-bold text-pink-500 mb-2 uppercase underline decoration-double">Deployment Ready</h2>
+                    <p class="text-xs text-gray-400 mb-10 max-w-sm mx-auto">Configuration locked and verified. Final push will initiate the background sync to Fiancée's inbox.</p>
+                    <button onclick="sendToGoogleScript()" id="final-push" class="bg-blue-600 hover:bg-blue-500 text-white px-10 py-4 rounded-full font-bold text-[10px] tracking-[0.3em] transition-all shadow-xl shadow-blue-900/30 inline-block uppercase hover:scale-105">
+                        Confirm Final Push
+                    </button>
+                </div>
+            `;
+        }
+
+        async function sendToGoogleScript() {
+            const btn = document.getElementById('final-push');
+            btn.innerText = "DEPLOYING...";
+            btn.disabled = true;
+
+            try {
+                await fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors', 
+                    cache: 'no-cache',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(responses)
+                });
+                
+                document.getElementById('content-area').innerHTML = `
+                    <div class="text-center animate-in py-10">
+                        <div class="text-6xl mb-6">✅</div>
+                        <h2 class="text-2xl font-bold text-green-500 mb-2 uppercase italic">Success</h2>
+                        <p class="text-xs text-gray-400 mt-2">Environment variables deployed successfully.<br>Configuration results sent to the recipient.</p>
+                    </div>`;
+            } catch (error) {
+                btn.innerText = "RETRY PUSH";
+                btn.disabled = false;
+                console.error("Deployment Error:", error);
+                alert("Deployment failed. Please check your internet or URL.");
+            }
+        }
+
+        render();
+    </script>
+</body>
+</html>
